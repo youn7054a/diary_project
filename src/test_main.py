@@ -4,6 +4,8 @@ from sqlmodel import Session
 from main import app, get_session, SQLModel, test_engine as engine
 
 from sqlmodel import SQLModel, create_engine
+import random
+import string
 
 client = TestClient(app)
 
@@ -12,14 +14,15 @@ def session_fixture():
     SQLModel.metadata.create_all(engine)
     with Session(engine) as session:
         yield session
-    SQLModel.metadata.drop_all(engine)
+    # SQLModel.metadata.drop_all(engine)
 
 # test user create
 def test_create_user(session):
-    # Define the user data to be sent in the request
+    random_email = ''.join(random.choices(string.ascii_lowercase + string.digits, k=10)) + "@example.com"
+
     user_data = {
         "username": "testuser",
-        "email": "testuser@example.com",
+        "email": random_email,
         "password_hash": "securepassword"
     }
 
